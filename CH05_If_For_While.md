@@ -371,3 +371,110 @@
 
   
 
+## 5.4 break & continue
+
+> for문이나 while문과 같은 반복문이 수행되고 있는 동안에 특정 조건을 만족하는 경우, __반복을 멈추고__ 
+>
+> __ `<code block>`을 빠져나오거나 다음 반복을 수행__하기 위해 제어하는 명령어
+
+- `break` : 반복문을 빠져나오게 하는 제어명령어
+
+  - 다중 반복문일 경우 `break`가 포함되어있는 제일 안쪽의 반복문 하나만 빠져나옴
+
+  ```python
+  k=0
+  while True :
+      k = k+1
+      if(k>3) :
+          break		# K>3이면 현재 break문이 속한 반복문(while문)을 빠져나오고 
+      print(k)		# break문 밑의 print()는 실행하지 않음
+   
+   - 1
+     2 
+     3
+  ```
+
+  ```python
+  for k in range(10) :
+      if(k>2) :
+          break		# 10번 반복하는 for문에서 k>2이면 빠져나옴
+      print(k)		# 더 이상 print(k)는 실행하지 않음
+      
+   - 0
+     1
+     2
+  ```
+
+- `continue` :  `continue` 밑에 있는 코드는 실행하지 않고 반복문 처음으로 돌아가서 다음 반복을 진행
+
+  ```python
+  for k in range(5) :	# k는 0부터 시작해서 4까지 총 5번 반복
+      if(k==2) :
+          continue	# k가 2면 이후 코드를 수행하지 않고 처음으로 돌아가서 다음 반복 진행(k=3)
+      print(k)		
+    
+   - 0
+     1		# k==2일때만 print()문을 실행하지 않고 다시 반복문 처음으로 돌아가서 k=3부터 진행
+     3
+     4
+  ```
+
+```python
+# while문에서 continue와 break문을 모두 사용한 코드
+
+k=0
+while True :
+    k = k+1
+    if(k==2) :			
+        print("continue next")	# k==2일때 'continue next' 출력 후 while문 처음으로 돌아감
+        continue
+    if(k>4) :
+        break		# k>4이면 아예 while문을 빠져나가서 종료
+    print(k)		# k==2 => continue일 때 print(k)는 실행하지 않고 처음으로 돌아가기 때문에 
+    				# 2는 출력되지 않음
+    				
+ - 1
+   continue next
+   3
+   4
+```
+
+
+
+## 5.5 List Comprehension
+
+> python에서는 list, set, dictionary에서 반복문을 한줄로 간략하게 표현 가능 
+>
+> 각각 list comprehension, set comprehension, dictionary comprehension이라고 함
+>
+> 표현 방법은 간단하나, 코드를 읽고 해석하기에는 편하지는 않음
+
+
+
+- `[< 반복 실행문 > for < 반복 변수 > in < 반복 범위 >]` : for 문을 한줄로 간략하게 표현 가능
+
+  ````python
+  ## 코드 설명 : numbers의 항목들을 각각 제곱한 값을 square 리스트에 저장
+  
+  numbers = [1,2,3,4,5]
+  square = [i**2 for i in numbers]	# for문을 list comprehension을 이용하여 한줄로 표현
+  print(square)						
+  
+   - [1, 4, 9, 16, 25]
+  ````
+
+- `[< 반복 실행문 > for < 반복 변수 > in < 반복 범위 > if <조건문>]` 
+
+  > `반복문(for)문`을 실행하다가 `if <조건문>`을 만족하는 경우에만 `< 반복 실행문 >`을 실행	
+
+  ```python
+  ## 코드 설명 : 리스트의 각 항목에서 3 이상의 숫자만 제곱해서 sqaure 리스트에 저장
+  
+  numbers2 = [1,2,3,4,5]
+  square2 = [i**2 for i in numbers2 if i>=3]
+  print(square2)
+  
+   - [9, 16, 25]
+  ```
+
+  
