@@ -253,3 +253,224 @@
 
   
 
+## 6.3 파일 읽고 쓰기
+
+> 출력 결과를 파일로 출력하거나 데이터를 파일에서 읽어야 할 때 
+>
+> 데이터를 파일로 저장(출력)하는 방법과 데이터가 저장되어 있는 파일에서 데이터를 읽는 방법을 배움
+
+
+
+### 파일 열기
+
+- `f = open('파일명', 'mode')`: '파일명'에 해당하는 파일을 열고 파일 객체를 f로 대입 
+
+  - `f`를 이용하여 파일을 읽고 쓰고 닫음
+
+  - `'파일명'` : 읽고 싶은(열고자 하는) 파일 이름
+
+  - `'mode'` : 파일 열기의 속성
+
+    | mode | 의미                                                         |
+    | :--: | ------------------------------------------------------------ |
+    |  r   | (기본) 읽기 모드로 파일 열기. `'mode'`를 지정하지 않으면 default로 읽기모드가 지정됨 |
+    |  w   | 쓰기 모드로 파일 열기.  같은 이름의 파일이 있으면 기존 내용은 모두 삭제됨(overwrite) |
+    |  x   | 쓰기 모드로 파일 열기.  같은 이름의 파일이 있으면 오류 발생  |
+    |  a   | 추가 모드로 파일 열기. 같은 이름의 파일이 없으면 `w`와 기능이 같음 |
+    |  b   | 바이너리 파일 모드로 파일 열기                               |
+    |  t   | (기본) 텍스트 파일 모드로 파일 열기. 지정하지 않으면 default로 텍스트 모드로 지정됨 |
+
+  - `mode`는 혼합해서 사용 가능 : ex) 바이너리 파일을 읽기 모드로 열고 싶으면 `mode`에 `bw`/`wb` 입력
+  - `mode`를 지정하지 않으면 `rt`와 같은 기능(읽기 모드이면서 텍스트 모드)
+  - `w`만 입력시 `wt`모드로 파일을 오픈
+
+
+
+### 파일 쓰기
+
+- `f.write(str)`
+
+  `f.close()`		 : 파일에 내용을 쓰고난 후, 파일을 닫음
+
+  - 파일 쓰기를 하기 위해서는 반드시 파일을 __쓰기 모드로 열어야함__
+  - 파일을 열고 지정한 내용을 쓴 후에는 반드시 __파일을 닫아야함__
+  - 파일을 닫고 나면 파일 객체인 f도 사라짐
+  - `f.write(str)`에서 `str`은 기록하고 싶은 내용(문자열)
+  - `write()`에서는 `print()`함수에서 사용하는 출력 방식 그대로 이용할 수 있음
+    - 따옴표(`" "`/`' '`)를 이용하여 문자열을 파일로 저장(출력)하거나
+    - 형식 지정 출력 방식을 이용해 문자열을 파일로 저장(출력) 가능
+  - `!cat 파일이름.파일형식` : 해당 파일이 존재하는지 확인 후 있으면 내용을 출력, 없으면 오류 메세지 출력
+
+  ```python
+  f = open('myFile.txt','w')				# myFile.txt파일을 쓰기모드로 열기
+  f.write("this is my first file.")		# myFile.txt파일에 해당 문자열 내용을 출력(저장)
+  f.close()								# write()한 후에는 반드시 close()로 닫기
+  !cat myFile.txt							# myFile.txt파일이 있다면 내용출력, 없으면 오류
+  
+   - this is my first file.
+  ```
+
+
+
+### 파일 읽기
+
+- `data = f.read()`
+
+  `f.close()` 			:  파일의 내용을 읽어서 data 변수에 대입하고, 마지막으로 파일을 닫음
+
+  - 파일 읽기를 하기 위해서는 반드시 파일을 __읽기 모드로 열어야함__
+  - 파일의 내용을 읽고 난 후에는 반드시 __파일을 닫아야함__
+
+  ```python
+  f = open('myFile.txt', 'r')			# myFile.txt파일을 읽기모드로 열기
+  file_text = f.read()				# myFile.txt파일의 내용을 file_text변수에 대입
+  f.close()							# read()한 후에는 반드시 close()로 닫기
+  
+  print(file_text)					# 파일 내용을 확인하기 위해 file_text를 화면에 출력
+  
+   - this is my first file.
+  ```
+
+
+
+### 파일 읽고 쓰기(응용)
+
+- 반복문을 이용해 파일을 읽고 쓰기
+
+  1.  파일 열기(file open)
+  2.  반복문을 이용해서 한줄씩 쓰기
+  3. 파일 닫기(file close)
+
+  ```python
+  ## 구구단 2단 일부를 파일에 출력(저장)하기
+  
+  f = open("two_times_table.txt",'w')		# 쓰기모드로 파일 열기
+  for num in range(1,6):		# 반복문을 통해 2*1에서 2*5까지만 입력
+      format_string = "2 * {0} = {1}\n".format(num, 2*num)
+      # 파일에 저장할 데이터를 변수에 할당
+      f.write(format_string)		# 파일에 쓰기 
+  f.close()						# 항상 마지막에 파일 닫기
+  !cat two_times_table.txt		# 파일 안의 data를 확인
+  
+   - 2 * 1 = 2
+     2 * 2 = 4
+     2 * 3 = 6
+     2 * 4 = 8
+     2 * 5 = 10
+  ```
+
+  ```python
+  ## (응용버전) 원하는 단을 입력받아서 해당 구구단을 파일에 출력(저장)하고, 파일 안 data를 확인
+  
+  f = open("n_times_table.txt",'w')				
+  num = int(input("원하시는 단을 입력해주세요 :"))	# 원하는 단 입력받기
+  for i in range(1,10) :
+      string = "{0} * {1} = {2}\n".format(num, i, num*i)	
+      f.write(string)
+  f.close()
+  !cat n_times_table.txt
+  
+   - 원하시는 단을 입력해주세요 :8
+     8 * 1 = 8
+     8 * 2 = 16
+     8 * 3 = 24
+     8 * 4 = 32
+     8 * 5 = 40
+     8 * 6 = 48
+     8 * 7 = 56
+     8 * 8 = 64
+     8 * 9 = 72
+  ```
+
+- `readline()` : 파일로부터 문자열 한 줄씩 읽음
+
+  - `readline()`을 사용시 그 다음 문자열 한 줄을 read
+  - 실행한 횟수만큼 문자열을 한 줄씩 읽음(반복문 이용)
+  - 마지막 한 줄을 읽고 나서 다시 `readline()`을 수행하면 빈 문자열을 return
+
+  ```python
+  f = open("two_times_table.txt")
+  line1 = f.readline()		# txt파일의 첫 번째 줄을 읽음
+  line2 = f.readline()		# txt파일의 두 번째 줄을 읽음
+  f.close()					# 항상 작업 끝난 후 파일 닫기
+  print(line1, end = "")		# 첫번째 줄 출력 - 이미 readlin()에 개행문자(\n)가 포함되어
+  print(line2, end = "")		# 있으므로 print()문에서는 end인자를 빈문자열("")로 설정
+  ```
+
+  - `while()`문을 이용해서 파일의 전체 데이터를 한 줄씩 읽어오기
+
+  ```python
+  f = open("two_times_table.txt")
+  line = f.readline()			# 첫 번째 줄 읽기
+  while line :				# line이 마지막(빈 문자열)이 아닐 때까지 반복
+      print(line, end = "")	# 읽어온 line을 출력. 이미 \n이 포함되어있으므로 end인자 수정
+      line = f.readline()		# 다음 line 읽어오기
+  f.close() 					# 마지막엔 항상 파일 닫기
+  ```
+
+- `readlines()` : 파일 전체의 모든 줄을 읽어서 한 줄 씩을 요소로 갖는 __리스트 타입__으로 return
+
+  - `readlines()`를 받은 리스트의 각 항목에는 파일에서 한 줄 씩 읽은 문자열이 들어있고, `\n`도 포함
+
+  ```python
+  f = open("two_times_table.txt")
+  lines = f.readlines()			# 파일의 데이터를 모두 다 읽어서 한줄 씩 리스트 항목에 대입됨
+  f.close()
+  
+  print(lines)
+  
+   - ['2 * 1 = 2\n', '2 * 2 = 4\n', '2 * 3 = 6\n', '2 * 4 = 8\n', '2 * 5 = 10\n']
+   			# 개행문자(\n)도 포함되어있음
+  ```
+
+  ```python
+  f = open("two_times_table.txt")
+  lines = f.readlines()		# 파일의 데이터를 모두 다 읽어서 lines에 저장(리스트 type)
+  f.close()
+  for line in lines :			# list를 <반복 범위>로 지정해서 반복문
+      print(line, end="")		# 리스트 항목마다 개행문자가 있으므로 end인자를 빈 문자열로 지정
+      
+    - 2 * 1 = 2
+  	2 * 2 = 4
+  	2 * 3 = 6
+  	2 * 4 = 8
+  	2 * 5 = 10
+  ```
+
+  ```python
+  ## 위의 코드를 조금 더 간단하게 작성
+  ## f.readlines()를 변수 lines에 대입하지 않고
+  ## for문의 <반복 범위>를 바로 f.readlines()로 지정
+  
+  f = open("two_times_table.txt")
+  for line in f.readlines() : 		# 또는 f.readlines() 대신 f만 입력해도 됨
+  	print(line, end = "")
+  	
+    - 2 * 1 = 2
+  	2 * 2 = 4
+  	2 * 3 = 6
+  	2 * 4 = 8
+  	2 * 5 = 10
+  ```
+
+- `with open('file name', 'mode') as f :`
+
+  ​		`<code block>`
+
+  - `<code block>`의 코드가 모두 끝나면 `open()`으로 열린 파일 객체는 자동으로 닫힘
+
+  ```python
+  with open('myTextFile2.txt', 'w') as f :		# with를 사용하면 close()할 필요없음
+      f.write('File read/write test2 : line1 \n')
+      f.write('File read/write test2 : line2 \n')	# <code block> 부분이 끝나면 자동으로 
+      f.write('File read/write test2 : line3 \n') # 파일객체가 닫힘
+  
+  !cat myTextFile2.txt				# write확인
+   
+    - File read/write test2 : line1 
+  	File read/write test2 : line2 
+  	File read/write test2 : line3 
+  ```
+
+  
+
