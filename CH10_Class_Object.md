@@ -589,3 +589,90 @@ class 클래스명 :
     자동차 객체의 개수  2	# 객체를 생성할 때마다 클래스 변수인 instance_count의 값이 1씩 증가
     ```
 
+
+
+## 10.4 클래스 상속
+
+> 클래스를 선언할 때 이미 만들어진 클래스의 변수와 함수를 그대로 이어받고 새로운 내용만 추가할 수 있음
+>
+> 객체지향 프로그래밍에서 기존의 클래스를 이어받는 것을 __상속__이라 함
+
+- 상속 관계에 있는 두 클래스를 각각 부모 클래스, 자식 클래스라고 함
+  - 부모클래스는 상위 클래스 / 슈퍼 클래스라고 하고, 자식 클래스는 하위 클래스 / 서브 클래스라고 함
+- 자식 클래스는 부모 클래스의 속성(변수)와 행위(함수)를  그대로 이용 가능
+  - 상속 후에는 자식 클래스만 갖는 속성과 행위를 추가할 수 있음
+
+```python
+## 클래스 상속 선언 형식
+--------------------------<코드>-----------------------------
+
+class 자식 클래스명(부모 클래스명):
+	< code block >
+	
+```
+
+  - #### 클래스 상속 구조
+
+    - 부모 클래스는 미리 선언되어 있어야함	
+    - 상속한 후에 자식 클래스에서 부모 클래스의 변수나 함수를 자신의 클래스에서 정의한 것처럼 사용 가능
+    - 부모 클래스에서 정의한 함수와 자식 클래스에서 정의한 함수 이름이 같은 경우
+      - 부모클래스의 함수를 호출하려면 `부모클래스명.함수명()` 또는 `super().함수명()`을 사용
+    - 보통 부모 클래스의 초기화 함수를 재사용함
+      - `부모클래스명.__init__ (self[,인자1,...])` 또는
+      - `super().__init__([인자1, ...])`로 사용 가능
+      - 단, `super()`로 초기화함수를 사용할 경우 인자에 `self`는 빼야함
+
+- #### 클래스 상속 예
+  - 위에서 만든 자전거 클래스를 상속받아서 자식 클래스인 접는 자전거클래스를 생성
+  - 접는 자전거는 일반 자전거의 속성과 동작을 그대로 갖고 있기 때문에 
+  - 상속한 후 접는 자전거의 속성과 동작만 추가하면 됨 => 코드의 재사용성이 좋아짐
+
+```python
+## 클래스 상속 예 - 자전거 클래스를 상속받아 접는 자전거 클래스를 선언
+--------------------------<코드>-----------------------------
+
+# 상속받기 전에 부모 클래스는 먼저 선언이 되어 있어야함
+class Bicycle:				# 부모 클래스 (자전거 클래스)
+	def __init__(self, wheel_size, color):	
+		self.wheel_size = wheel_size
+		self.color = color
+	
+	def move(self, speed) :
+		print('자전거가 {0}km/h로 전진'.format(speed))
+	
+	def turn(self, direction):
+		print('자전거가 {0}회전'.format(direction))
+		
+	def stop(self):
+		print('자전거({0}, {1})가 정지'.format(self.wheel_size, self.color))
+		
+class FoldingBicycle(Bicycle) :
+	def __init__(self, wheel_size, color, state) : 	# 자식클래스 초기화
+		Bicycle.__init__(self,wheel_size, color)	# 부모클래스의 초기화 재사용
+		# super().__init__(wheel_size, color) 이렇게도 사용 가능
+		self.state = state		# 자식클래스에서만 사용할 새로운 변수 추가
+		
+	def fold(self) :
+		self.state = 'folding'
+		print('자전거 접기, state = ', self.state)
+	
+	def unfold(self) :
+		self.state = 'unfolding'
+		print('자전거 펴기, state = ', self.state)
+		
+folding_bicycle = FoldingBicycle(27, 'white', 'unfolding') #객체생성
+
+folding_bicycle.move(20)
+folding_bicycle.turn('우')
+folding_bicycle.stop()		# 부모클래스의 메서드 호출
+folding_bicycle.fold()
+folding_bicycle.unfold()	# 자식클래스에서 정의한 메서드 호출
+
+--------------------------<결과>-----------------------------
+자전거가 20km/h로 전진
+자전거가 우회전
+자전거(27, white)가 정지
+자전거 접기, state =  folding
+자전거 펴기, state =  unfolding
+```
+
